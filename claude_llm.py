@@ -13,7 +13,7 @@ class Claude():
             api_key=api_key if api_key else os.environ.get('ANTHROPIC_API_KEY'),
         )
 
-    def summarise_transcript(self, transcript: str, title: str, model: str='haiku', prompt: str=None):
+    def summarise_transcript(self, transcript: str, model: str='haiku', prompt: str=None):
         """
         Summarises a video transcript using Claude LLM
         Currently we use the haiku model, there is option to use a more powerful model - see comments
@@ -40,7 +40,7 @@ class Claude():
             temperature=0.0,
             system=prompt,
             messages=[
-                {"role": "user", "content": f"Title: \n{title}\nTranscript:\n{video_transcript}"},
+                {"role": "user", "content": f"Transcript:\n{transcript}"},
             ]
         )
         print(message)

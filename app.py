@@ -87,16 +87,19 @@ if st.button("Start Processing"):
     else:
         # Check if the uploaded file is MP4/M4A and needs audio extraction
         if audio_file.type in ["audio/mp4", "video/mp4"]:
-            audio_data = extract_audio(audio_file)
+            audio_path = extract_audio(audio_file)
         else:
-            audio_data = audio_file.getvalue()
+            audio_path = audio_file.getvalue()
 
-        print(f'audio_data: {audio_data}')
-        transcript = get_audio_transcript(audio_data)
+        print(f'audio_data: {audio_path}')
+        transcript = get_audio_transcript(audio_path)
+        
         st.session_state['audio_summary'] = transcript
 
+        prompted_output = main(transcript=transcript, prompt=prompt, model=model, api_key=api_key)
+
         output_container.success("Processing complete! See results below:")
-        output_container.text(st.session_state['audio_summary'])
+        output_container.text(prompted_output)
 
 # if st.button("Start Processing"):
 #     if not audio_file or st.session_state['audio_summary']:
