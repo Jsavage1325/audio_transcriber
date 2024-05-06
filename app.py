@@ -69,7 +69,7 @@ def extract_audio(video_file) -> bytes:
     # Initialize Streamlit layout
 st.title("Audio Summariser")
 
-audio_file = st.file_uploader("Upload your audio file:", type=['mp3', 'm4a', 'mp4'])
+audio_file = st.file_uploader("Upload your audio file:", type=['wav', 'mp3', 'm4a', 'mp4'])
 model = st.selectbox("Choose Model:", ["haiku", "sonnet", "opus"])
 prompt = st.text_area("Enter Prompt:")
 api_key = st.text_input("Enter API Key:", type="password")
