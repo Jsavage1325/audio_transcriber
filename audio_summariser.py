@@ -2,12 +2,34 @@ import json
 import os
 from time import sleep
 
+import whisper
+
 from claude_llm import Claude
 
-def get_audio_transcript(audio_file) -> str:
+
+def get_audio_transcript(audio_file: bytes) -> str:
     """
-    summarises audio using openais whisper
+    Transcribes audio using OpenAI's Whisper model.
+
+    Args:
+        audio_file (bytes): The audio file loaded into memory.
+
+    Returns:
+        str: The transcribed text from the audio file.
     """
+
+    # Load the model, using the "base" model for a balance between speed and accuracy
+    model = whisper.load_model("base")
+
+    # Decode the audio file
+    audio = whisper.load_audio(audio_file)
+    audio = whisper.pad_or_trim(audio)
+
+    # Run the model
+    result = model.transcribe(audio)
+
+    # Extract the transcription text
+    return result["text"]
 
 
 def summarise_audio_transcript(transcript: str, title: str, model: str, prompt: str, api_key: str):

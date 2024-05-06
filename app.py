@@ -22,6 +22,7 @@ def run_script(video_urls, model, prompt, api_key):
     return main(video_urls, prompt, model, api_key)
 
 def start_processing(video_urls, model, prompt, api_key):
+    
     results = run_script(video_urls, model, prompt, api_key)
     # Create ZIP file in memory for all the output files
     zip_buffer = BytesIO()
@@ -51,6 +52,7 @@ if st.button("Start Processing"):
     else:
         st.session_state['audio_summary'] = start_processing(audio_file, model, prompt, api_key)
         # output_container.success("Processing complete! See results below:")
-        output_container.text(st.session_state['audio_summary'])
+        # output_container.text(st.session_state['audio_summary'])
+        st.write(st.session_state['audio_summary'])
 
 st.button("Quit", on_click=st.stop)
