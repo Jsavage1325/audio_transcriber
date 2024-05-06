@@ -25,16 +25,6 @@ def run_script(video_urls, model, prompt, api_key):
     """
     return main(video_urls, prompt, model, api_key)
 
-def start_processing(video_urls, model, prompt, api_key):
-
-    results = run_script(video_urls, model, prompt, api_key)
-    # Create ZIP file in memory for all the output files
-    zip_buffer = BytesIO()
-    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
-        for filename, filedata in results.items():
-            zip_file.writestr(filename, filedata)
-    return zip_buffer
-
 # def extract_audio(video_file):
 #     """Extract audio from video file and return it as an audio file in memory."""
 #     print(video_file.name)
@@ -66,6 +56,13 @@ def extract_audio(video_file) -> bytes:
     
     return audio_buffer.name
 
+def save_audio_file(uploaded_file):
+    # Save the uploaded audio to the server's filesystem
+    file_path = f"temp_audio_file_{uploaded_file.name}"
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getvalue())  # Rewind to the start if read previously
+    return file_path
+
     # Initialize Streamlit layout
 st.title("Audio Summariser")
 
@@ -89,9 +86,9 @@ if st.button("Start Processing"):
         if audio_file.type in ["audio/mp4", "video/mp4"]:
             audio_path = extract_audio(audio_file)
         else:
-            audio_path = audio_file.getvalue()
-
-        print(f'audio_data: {audio_path}')
+            print(audio_file)
+            audio_path = save_audio_file(audio_file)
+            
         transcript = get_audio_transcript(audio_path)
         
         st.session_state['audio_summary'] = transcript
@@ -101,15 +98,5 @@ if st.button("Start Processing"):
         output_container.success("Processing complete! See results below:")
         output_container.text(prompted_output)
 
-# if st.button("Start Processing"):
-#     if not audio_file or st.session_state['audio_summary']:
-#         st.warning("Please enter at least one video URL.")
-#     elif not api_key.strip():
-#         st.warning("Please enter your API Key.")
-#     else:
-#         st.session_state['audio_summary'] = start_processing(audio_file, model, prompt, api_key)
-#         # output_container.success("Processing complete! See results below:")
-#         # output_container.text(st.session_state['audio_summary'])
-#         st.write(st.session_state['audio_summary'])
 
 st.button("Quit", on_click=st.stop)
