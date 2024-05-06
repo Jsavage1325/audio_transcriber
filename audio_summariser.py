@@ -28,12 +28,10 @@ def main(audio_file, prompt, model: str, api_key: str=None):
         transcript = get_audio_transcript(audio_file)
         # Generate summary
         summary_text = summarise_audio_transcript(transcript, title, model, prompt, api_key)
-        summary_text, summary_filename = f"{title.replace(' ', '-')}-output.txt"
-        results[summary_filename] = summary.encode('utf-8')  # Encode summary as bytes
+        # summary_text, summary_filename = f"{title.replace(' ', '-')}-output.txt"
+        # results[summary_filename] = summary.encode('utf-8')  # Encode summary as bytes
         sleep(15)  # Throttle requests to avoid overloading servers or hitting API limits
         return summary_text
-        else:
-            print("Invalid YouTube URL:", url)
     except KeyboardInterrupt:
         exit()
     except Exception as e:
